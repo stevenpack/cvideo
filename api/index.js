@@ -7,8 +7,8 @@ addEventListener('fetch', event => {
  */
 async function handleRequest(request) {
 
-  if (event.request.method === "OPTIONS") {    
-    return handleOptions(event.request)
+  if (request.method === "OPTIONS") {    
+    return handleOptions(request)
   } 
 
 
@@ -18,8 +18,8 @@ async function handleRequest(request) {
   let url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/direct_upload`;
   let body = {
     "maxDurationSeconds": 30,
-    "requireSignedURLs": true,
-    "allowedOrigins": ["cvideo.rocks"],
+    "requireSignedURLs": false,
+    //"allowedOrigins": ["cvideo.rocks"],
   };
   let res = await fetch(url, {
     method: "POST",
@@ -38,19 +38,13 @@ async function handleRequest(request) {
 }
 
 function handleOptions(request) {
-  const corsHeaders = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, HEAD, PATCH, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-  }      
-  if (request.headers.get("Origin") !== null &&
-      request.headers.get("Access-Control-Request-Method") !== null &&
-      request.headers.get("Access-Control-Request-Headers") !== null) {
-    // Handle CORS pre-flight request.
-    return new Response(null, { headers: corsHeaders });
-  }
-  // Handle standard OPTIONS request.
   return new Response(null, {
-      headers: { "Allow": "GET, HEAD, PATCH, POST, OPTIONS" } 
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Origin': 'http://localhost:8080',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    }
   });
 }
