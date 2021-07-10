@@ -84,7 +84,7 @@ export default {
           const formData = new FormData();
           formData.append("file", blob);
           this.setStatus("Uploading...");
-          await fetch(uploadData.uploadUrl, {
+          await fetch(uploadData.uploadURL, {
             method: "POST",
             body: formData,
           });          
