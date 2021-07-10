@@ -1,5 +1,14 @@
 # video-cv
 
+## Video CV creator
+Show how easy it is with Cloudflare Registrar + Pages + Workers + Stream to build a similar service to TikTok Resumes.
+
+Possible extensions:
+- Accounts
+- Admin views
+- Much more...
+
+
 ## Project setup
 ```
 npm install
