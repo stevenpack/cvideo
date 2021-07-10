@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>   
-    <p>Hit record and we'll give you a video CV to land your next gig!</p>
+    <p>Hit 'Get Started' and record your 30 second video and land your next job!</p>
   </div>
 </template>
 

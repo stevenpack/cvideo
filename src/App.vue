@@ -55,7 +55,7 @@ export default {
         this.recorder.camera = this.camera;
         this.setStatus("Recording...");
         this.recorder.startRecording();
-        await this.sleep(5000);            
+        await this.sleep(29000);            
         await this.stopRecording();
       } catch (e) {
         console.error(e);
@@ -77,19 +77,19 @@ export default {
           //TODO: make uploading a new state
           this.setStatus("Getting upload link...");
           this.transition("upload");
-          let {uploadUrl, uid} = await this.getUploadUrl();
+          let uploadData = await this.getUploadUrl();
           // let uploadUrl = "https://upload.videodelivery.net/9650019573c0418badc9f9b3915832ac";
           // let uid = "9650019573c0418badc9f9b3915832ac";
-          console.log(uploadUrl);          
+          console.log(JSON.stringify(uploadData));          
           const formData = new FormData();
           formData.append("file", blob);
           this.setStatus("Uploading...");
-          await fetch(uploadUrl, {
+          await fetch(uploadData.uploadUrl, {
             method: "POST",
             body: formData,
           });          
           this.setStatus("Done.");
-          this.viewLink = `https://watch.videodelivery.net/${uid}`;
+          this.viewLink = `https://watch.videodelivery.net/${uploadData.uid}`;
           console.log(this.viewLink);
           this.transition("init");
           
