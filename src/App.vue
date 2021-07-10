@@ -9,7 +9,7 @@
 
     <div>
       <i>{{status}}</i>
-      <span v-if="viewLink != null">Share you video CV link <a target="_blank" :href="viewLink">{{viewLink}}</a></span>
+      <div v-if="viewLink != null">Share you video CV link <a target="_blank" :href="viewLink">{{viewLink}}</a></div>
     </div>
     
     <div style="padding-top: 2rem">
@@ -28,24 +28,18 @@ export default {
     HelloWorld
   },
   data() {
-    return {
+    return {    
+      state: "init",
       status: null,
       viewLink: null,
       recorder: null,
       camera: null,
-      state: "init"
     }    
   },
   methods: {
     transition(state) {
+      console.log(`STATE: ${this.state} -> ${state}`)
       this.state = state;
-      // switch (this.state) {
-      //   case "init":
-      //     this.viewLink = null;
-      //     break;
-      //   default:
-      //     break;
-      // }
     },
     async getStarted() {
       this.camera = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
@@ -81,7 +75,7 @@ export default {
           this.recorder.camera.stop();
           this.releasePlayer();
           //TODO: make uploading a new state
-          this.setStatus("Uploading...");
+          this.setStatus("Getting upload link...");
           this.transition("upload");
           let {uploadUrl, uid} = await this.getUploadUrl();
           // let uploadUrl = "https://upload.videodelivery.net/9650019573c0418badc9f9b3915832ac";
@@ -89,11 +83,11 @@ export default {
           console.log(uploadUrl);          
           const formData = new FormData();
           formData.append("file", blob);
+          this.setStatus("Uploading...");
           await fetch(uploadUrl, {
             method: "POST",
             body: formData,
-          });
-          
+          });          
           this.setStatus("Done.");
           this.viewLink = `https://watch.videodelivery.net/${uid}`;
           console.log(this.viewLink);
@@ -132,7 +126,7 @@ export default {
       await sleep(ms);
     },
     setStatus(status) {
-      console.log(`${this.status}->${status}`)
+      console.log(status)
       this.status = status;
     }
 

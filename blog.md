@@ -28,5 +28,4 @@ git push -u origin main
 1. account id, zone id, route into toml
 1. wrangler login
 1. Add a DNS record (so annoying...)
-
-
+1. call worker
