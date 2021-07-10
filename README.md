@@ -4,7 +4,12 @@
 Show how easy it is with Cloudflare Registrar + Pages + Workers + Stream to build a similar service to TikTok Resumes.
 
 Possible extensions:
+- Wait for confirmation the upload is finished (the upload returns before encoding is done.)
+- Preview
 - Accounts
+- Short urls
+- Turn on signing
+- Viewer page on cvideo.rocks domain
 - Admin views
 - Much more...
 
