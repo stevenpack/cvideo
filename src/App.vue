@@ -9,6 +9,7 @@
 
     <div>
       <i>{{status}}</i>
+      <span v-if="viewLink != null">Share you video CV link <a target="_blank" :href="viewLink">{{viewLink}}</a></span>
     </div>
     
     <div style="padding-top: 2rem">
@@ -29,6 +30,7 @@ export default {
   data() {
     return {
       status: null,
+      viewLink: null,
       recorder: null,
       camera: null,
       state: "init"
@@ -37,6 +39,13 @@ export default {
   methods: {
     transition(state) {
       this.state = state;
+      // switch (this.state) {
+      //   case "init":
+      //     this.viewLink = null;
+      //     break;
+      //   default:
+      //     break;
+      // }
     },
     async getStarted() {
       this.camera = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
@@ -67,17 +76,29 @@ export default {
       await this.recorder.stopRecording();
       let videoContentType = this.recorder.blob.type;
       console.log(`videoContentType: ${videoContentType}`);
-      //let blob = await this.recorder.getBlob();    
+      let blob = await this.recorder.getBlob();    
       try {
           this.recorder.camera.stop();
           this.releasePlayer();
           //TODO: make uploading a new state
           this.setStatus("Uploading...");
           this.transition("upload");
-          let uploadUrl = await this.getUploadUrl();
-          console.log(uploadUrl);
-          //await this.postQuestion(uploadUrl, blob);
-          //this.setStatus("Done.");          
+          let {uploadUrl, uid} = await this.getUploadUrl();
+          // let uploadUrl = "https://upload.videodelivery.net/9650019573c0418badc9f9b3915832ac";
+          // let uid = "9650019573c0418badc9f9b3915832ac";
+          console.log(uploadUrl);          
+          const formData = new FormData();
+          formData.append("file", blob);
+          await fetch(uploadUrl, {
+            method: "POST",
+            body: formData,
+          });
+          
+          this.setStatus("Done.");
+          this.viewLink = `https://watch.videodelivery.net/${uid}`;
+          console.log(this.viewLink);
+          this.transition("init");
+          
       } catch (e) {
           console.error(e);
           this.setStatus("Uploaded failed. " + e.message);
@@ -88,7 +109,7 @@ export default {
       let url = "https://cvideo.rocks/api/upload-url";
       console.log(`Getting ${url}`);
       let res = await axios.get(url);
-      return res.data.uploadUrl;
+      return res.data;
     },
     showPlayer(camera) {
       let video = document.querySelector('video');
@@ -111,6 +132,7 @@ export default {
       await sleep(ms);
     },
     setStatus(status) {
+      console.log(`${this.status}->${status}`)
       this.status = status;
     }
 
