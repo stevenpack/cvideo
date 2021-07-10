@@ -1,0 +1,7 @@
+name = "cvideo-api"
+type = "javascript"
+
+account_id = "b88135f6fd85583eb4dda76d022c1148"
+workers_dev = false
+route = "cvideo.rocks/api/*"
+zone_id = "52923df05c203dc2776ea2edce6e265f"
